@@ -56,7 +56,7 @@ LINUX_HAS_HEADERS_INSTALL:=y
 HOST_KMAKE := $(MAKE) -C $(HOST_BUILD_DIR) \
 	$(KERNEL_MAKE_FLAGS) \
 	CC="$(KERNEL_CC)" \
-	HOSTCFLAGS="$(HOST_CFLAGS)"
+	HOSTCFLAGS="$(HOST_CFLAGS) -Wno-undef"
 
 define Host/Configure/all
 	mkdir -p $(BUILD_DIR_TOOLCHAIN)/linux-dev
