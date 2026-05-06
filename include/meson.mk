@@ -107,7 +107,7 @@ define Host/Configure/Meson
 		setup \
 		--native-file $(HOST_BUILD_DIR)/openwrt-native.txt \
 		-Ddefault_library=static \
-		$(MESON_HOST_ARGS) \
+		$(filter-out --disable-nls,$(MESON_HOST_ARGS)) \
 		$(MESON_HOST_BUILD_DIR) \
 		$(MESON_HOST_BUILD_DIR)/.., \
 		$(MESON_HOST_VARS))
@@ -134,7 +134,7 @@ define Build/Configure/Meson
 		--native-file $(PKG_BUILD_DIR)/openwrt-native.txt \
 		--cross-file $(PKG_BUILD_DIR)/openwrt-cross.txt \
 		-Ddefault_library=both \
-		$(MESON_ARGS) \
+		$(filter-out --disable-nls,$(MESON_ARGS)) \
 		$(MESON_BUILD_DIR) \
 		$(MESON_BUILD_DIR)/.., \
 		$(MESON_VARS))
