@@ -1,0 +1,148 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OpenClaw Agent <agent@openclaw.ai>
+Date: Wed, 6 May 2026 19:20:00 +0800
+Subject: [PATCH] bits/ioctl.h: add include guards to prevent macro
+ redefinition
+
+Add #ifndef guards to ioctl macros in all architecture-specific
+bits/ioctl.h files to prevent macro redefinition warnings when
+kernel UAPI headers are also included (~177 warnings).
+
+The kernel's asm-generic/ioctl.h and musl's bits/ioctl.h both define
+_IOC, _IO, _IOR, _IOW, _IOWR, _IOC_NONE, _IOC_WRITE, _IOC_READ
+independently. When both headers are in the include path, every macro
+is redefined. By adding #ifndef guards on both sides, whichever header
+is included first wins and the other yields.
+
+Signed-off-by: OpenClaw Agent <agent@openclaw.ai>
+---
+ arch/generic/bits/ioctl.h   | 16 ++++++++++++++++
+ arch/mips/bits/ioctl.h      | 16 ++++++++++++++++
+ arch/mips64/bits/ioctl.h    | 16 ++++++++++++++++
+ arch/mipsn32/bits/ioctl.h   | 16 ++++++++++++++++
+ 4 files changed, 64 insertions(+)
+
+--- a/arch/generic/bits/ioctl.h
++++ b/arch/generic/bits/ioctl.h
+@@ -1,12 +1,28 @@
++#ifndef _IOC
+ #define _IOC(a,b,c,d) ( ((a)<<30) | ((b)<<8) | (c) | ((d)<<16) )
++#endif
++#ifndef _IOC_NONE
+ #define _IOC_NONE  0U
++#endif
++#ifndef _IOC_WRITE
+ #define _IOC_WRITE 1U
++#endif
++#ifndef _IOC_READ
+ #define _IOC_READ  2U
++#endif
+ 
++#ifndef _IO
+ #define _IO(a,b) _IOC(_IOC_NONE,(a),(b),0)
++#endif
++#ifndef _IOW
+ #define _IOW(a,b,c) _IOC(_IOC_WRITE,(a),(b),sizeof(c))
++#endif
++#ifndef _IOR
+ #define _IOR(a,b,c) _IOC(_IOC_READ,(a),(b),sizeof(c))
++#endif
++#ifndef _IOWR
+ #define _IOWR(a,b,c) _IOC(_IOC_READ|_IOC_WRITE,(a),(b),sizeof(c))
++#endif
+ 
+ #define TCGETS		0x5401
+ #define TCSETS		0x5402
+--- a/arch/mips/bits/ioctl.h
++++ b/arch/mips/bits/ioctl.h
+@@ -1,12 +1,28 @@
++#ifndef _IOC
+ #define _IOC(a,b,c,d) ( ((a)<<29) | ((b)<<8) | (c) | ((d)<<16) )
++#endif
++#ifndef _IOC_NONE
+ #define _IOC_NONE  1U
++#endif
++#ifndef _IOC_READ
+ #define _IOC_READ  2U
++#endif
++#ifndef _IOC_WRITE
+ #define _IOC_WRITE 4U
++#endif
+ 
++#ifndef _IO
+ #define _IO(a,b) _IOC(_IOC_NONE,(a),(b),0)
++#endif
++#ifndef _IOW
+ #define _IOW(a,b,c) _IOC(_IOC_WRITE,(a),(b),sizeof(c))
++#endif
++#ifndef _IOR
+ #define _IOR(a,b,c) _IOC(_IOC_READ,(a),(b),sizeof(c))
++#endif
++#ifndef _IOWR
+ #define _IOWR(a,b,c) _IOC(_IOC_READ|_IOC_WRITE,(a),(b),sizeof(c))
++#endif
+ 
+ #define TCGETA		0x5401
+ #define TCSETA		0x5402
+--- a/arch/mips64/bits/ioctl.h
++++ b/arch/mips64/bits/ioctl.h
+@@ -1,12 +1,28 @@
++#ifndef _IOC
+ #define _IOC(a,b,c,d) ( ((a)<<29) | ((b)<<8) | (c) | ((d)<<16) )
++#endif
++#ifndef _IOC_NONE
+ #define _IOC_NONE  1U
++#endif
++#ifndef _IOC_READ
+ #define _IOC_READ  2U
++#endif
++#ifndef _IOC_WRITE
+ #define _IOC_WRITE 4U
++#endif
+ 
++#ifndef _IO
+ #define _IO(a,b) _IOC(_IOC_NONE,(a),(b),0)
++#endif
++#ifndef _IOW
+ #define _IOW(a,b,c) _IOC(_IOC_WRITE,(a),(b),sizeof(c))
++#endif
++#ifndef _IOR
+ #define _IOR(a,b,c) _IOC(_IOC_READ,(a),(b),sizeof(c))
++#endif
++#ifndef _IOWR
+ #define _IOWR(a,b,c) _IOC(_IOC_READ|_IOC_WRITE,(a),(b),sizeof(c))
++#endif
+ 
+ #define TCGETA		0x5401
+ #define TCSETA		0x5402
+--- a/arch/mipsn32/bits/ioctl.h
++++ b/arch/mipsn32/bits/ioctl.h
+@@ -1,12 +1,28 @@
++#ifndef _IOC
+ #define _IOC(a,b,c,d) ( ((a)<<29) | ((b)<<8) | (c) | ((d)<<16) )
++#endif
++#ifndef _IOC_NONE
+ #define _IOC_NONE  1U
++#endif
++#ifndef _IOC_READ
+ #define _IOC_READ  2U
++#endif
++#ifndef _IOC_WRITE
+ #define _IOC_WRITE 4U
++#endif
+ 
++#ifndef _IO
+ #define _IO(a,b) _IOC(_IOC_NONE,(a),(b),0)
++#endif
++#ifndef _IOW
+ #define _IOW(a,b,c) _IOC(_IOC_WRITE,(a),(b),sizeof(c))
++#endif
++#ifndef _IOR
+ #define _IOR(a,b,c) _IOC(_IOC_READ,(a),(b),sizeof(c))
++#endif
++#ifndef _IOWR
+ #define _IOWR(a,b,c) _IOC(_IOC_READ|_IOC_WRITE,(a),(b),sizeof(c))
++#endif
+ 
+ #define TCGETA		0x5401
+ #define TCSETA		0x5402
